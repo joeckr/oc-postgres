@@ -60,9 +60,14 @@ jobs:
       - name: Determine Image Tags
         id: tags
         run: |
-          MAJOR="${{ matrix.major }}"
-          IS_LATEST="${{ matrix.is_latest }}"
+          MAJOR="${{ matrix.version.major }}"
+          IS_LATEST="${{ matrix.version.is_latest }}"
           REPO="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+
+          if [ -z "$MAJOR" ]; then
+            echo "ERROR: matrix.version.major evaluated to empty!"
+            exit 1
+          fi
 
           TAG_LIST="${REPO}:${MAJOR}"
 
@@ -78,7 +83,7 @@ jobs:
           context: .
           file: ./Dockerfile
           build-args: |
-            VERSION=${{ matrix.upstream }}
+            VERSION=${{ matrix.version.upstream }}
           platforms: linux/amd64, linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.tags.outputs.tags }}
