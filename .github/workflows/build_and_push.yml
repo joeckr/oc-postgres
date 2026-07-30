@@ -28,7 +28,7 @@ jobs:
           echo "matrix=$(jq -c . versions.json)" >> $GITHUB_OUTPUT
 
   build:
-    needs: matrix
+    needs: matrix-setup
     runs-on: ubuntu-latest
     strategy:
       matrix:
