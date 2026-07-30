@@ -30,7 +30,7 @@ jobs:
       - name: Set Matrix
         id: set-matrix
         run: |
-          MATRIX_JSON=$(jq -c '.[]' versions.json)
+          MATRIX_JSON=$(jq -c . versions.json)
           echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
 
   build:
