@@ -58,6 +58,7 @@ jobs:
         id: tags
         run: |
           MAJOR="${{ matrix.version.major }}"
+          UPSTREAM="${{ matrix.version.upstream }}"
           IS_LATEST="${{ matrix.version.latest }}"
           REPO="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
 
