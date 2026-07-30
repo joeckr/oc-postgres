@@ -1,17 +1,12 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
     tags: [ "v*" ]
   pull_request:
     branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 env:
@@ -19,7 +14,7 @@ env:
   IMAGE_NAME: ${{ github.actor }}/postgres
 
 jobs:
-  matrix:
+  matrix-setup:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -71,7 +66,7 @@ jobs:
             exit 1
           fi
 
-          TAG_LIST="${REPO}:${MAJOR}"
+          TAG_LIST="${REPO}:${MAJOR}, ${REPO}:${UPSTREAM}"
 
           if [ "$IS_LATEST" = "true" ]; then
             TAG_LIST="${TAG_LIST},${REPO}:latest"
