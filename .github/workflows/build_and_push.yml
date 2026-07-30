@@ -30,7 +30,7 @@ jobs:
       - name: Set Matrix
         id: set-matrix
         run: |
-          MATRIX_JSON=$(jq -c '.[]' versions.json)
+          MATRIX_JSON=$(jq -c . versions.json)
           echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
 
   build:
@@ -60,12 +60,13 @@ jobs:
       - name: Determine Image Tags
         id: tags
         run: |
-          MAJOR="${{ matrix.version.major }}"
-          IS_LATEST="${{ matrix.version.is_latest }}"
+          MAJOR="${{ matrix.major }}"
+          IS_LATEST="${{ matrix.is_latest }}"
           REPO="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
 
           if [ -z "$MAJOR" ]; then
-            echo "ERROR: matrix.version.major evaluated to empty!"
+            echo "$matrix"
+            echo "ERROR: matrix.major evaluated to empty!"
             exit 1
           fi
 
