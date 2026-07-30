@@ -2,7 +2,7 @@
 
 This project exists for those who want to run Postgres in a rootless environment. (Looking at you OpenShift)
 
-This is also going to be my first project that I play with GitHub Actions. Want to try a way to have it dynamically build multiple versions of Postgres from one Dockerfile. Goal right now is to support v17 on Alpine. You can however take this Dockerfile and build it for any version of Postgres you want (just keep in mind non Alpine versions require different commands).
+This is also going to be my first project that I play with GitHub Actions. Want to try a way to have it dynamically build multiple versions of Postgres from one Dockerfile. Goal right now is to support all major versions that receive active support on Alpine. For a list of supported versions, see the `versions.json` file. You can also take this Dockerfile and build it for any version of Postgres you want (just keep in mind non Alpine versions require different commands). IF there is a version you want that is not supported, please open an issue or submit a PR.
 
 The Dockerfile will by default set PGDATA to `/tmp/data`. Do not override this value unless you plan to make changes to the Dockerfile as it further makes sure permissions are set correctly for the data directory.
 

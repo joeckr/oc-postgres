@@ -7,6 +7,7 @@ on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
+    tags: [ "v*" ]
   pull_request:
     branches: [ "main" ]
 
@@ -18,7 +19,22 @@ env:
   IMAGE_NAME: ${{ github.actor }}/postgres
 
 jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Set Matrix
+        id: set-matrix
+        run: |
+          MATRIX_JSON=$(jq -c '.[]' versions.json)
+          echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
+
   build:
+    needs: matrix
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -26,10 +42,13 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
+
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
+
       - name: Log in GHCR
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v3
@@ -37,23 +56,29 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Extract MetaData
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=ref,event=branch
-            type=ref,event=pr
+
+      - name: Determine Image Tags
+        id: tags
+        run: |
+          MAJOR="${{ matrix.major }}"
+          IS_LATEST="${{ matrix.is_latest }}"
+          REPO="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+
+          TAG_LIST="${REPO}:${MAJOR}"
+
+          if [ "$IS_LATEST" = "true" ]; then
+            TAG_LIST="${TAG_LIST},${REPO}:latest"
+          fi
+
+          echo "tags=${TAG_LIST}" >> $GITHUB_OUTPUT
+
       - name: Build & Push
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
+          build-args: |
+            VERSION=${{ matrix.upstream }}
           platforms: linux/amd64, linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.tags.outputs.tags }}

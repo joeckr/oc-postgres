@@ -1,0 +1,27 @@
+[
+  {
+    "major": 18,
+    "upstream": 18.4,
+    "latest": true
+  },
+  {
+    "major": 17,
+    "upstream": 17.10,
+    "latest": false
+  },
+  {
+    "major": 16,
+    "upstream": 16.14,
+    "latest": false
+  },
+  {
+    "major": 15,
+    "upstream": 15.18,
+    "latest": false
+  },
+  {
+    "major": 14,
+    "upstream": 14.23,
+    "latest": false
+  }
+]
