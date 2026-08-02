@@ -3,7 +3,8 @@ ARG REGISTRY=docker.io/library
 FROM $REGISTRY/postgres:$VERSION-alpine
 
 ENV PGDATA=/tmp/data
+ENV LANG=C.UTF-8
 
-RUN mkdir -p /tmp/data && \
-    chgrp -R 0 /tmp && \
-    chmod -R g+rwX /tmp
+RUN mkdir -p /tmp/data /var/run/postgresql && \
+    chgrp -R 0 /tmp /var/run/postgresql && \
+    chmod -R g+rwX /tmp /var/run/postgresql
