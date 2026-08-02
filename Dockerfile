@@ -8,3 +8,6 @@ ENV LANG=C.UTF-8
 RUN mkdir -p /tmp/data /var/run/postgresql && \
     chgrp -R 0 /tmp /var/run/postgresql && \
     chmod -R g+rwX /tmp /var/run/postgresql
+
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
