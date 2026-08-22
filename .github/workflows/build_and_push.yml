@@ -8,6 +8,11 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: write
+  security-events: write
+
 jobs:
   matrix-build:
     uses: joeckr/ci-templates/.github/workflows/build-oc-modified.yml@v1
