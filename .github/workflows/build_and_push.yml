@@ -10,7 +10,7 @@ on:
 
 jobs:
   matrix-build:
-    uses: joeckr/ci-templates/.github/workflows/build-oc-modified.yml@main
+    uses: joeckr/ci-templates/.github/workflows/build-oc-modified.yml@v1
     with:
       image: "postgres"
     secrets: inherit
