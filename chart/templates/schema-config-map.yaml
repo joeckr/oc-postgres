@@ -4,7 +4,7 @@ kind: ConfigMap
 metadata:
   name: postgres-schema
   labels:
-    app: {{ .Values.app }}
+    app: {{ .Values.postgres.app }}
 data:
   schema.sql: |
     {{ .Files.Get (print "config/schema.sql") | nindent 4 }}
